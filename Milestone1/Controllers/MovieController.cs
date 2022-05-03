@@ -12,13 +12,7 @@ namespace Milestone1.Controllers
     [Route("[controller]")]
     public class MovieController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
-      
-
+        
         private readonly ILogger<MovieController> _logger;
 
         public MovieController(ILogger<MovieController> logger)
@@ -27,24 +21,27 @@ namespace Milestone1.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Movie> Get(string name)
+        public List<Movie> Get(string name)
         {
     
             var movies =  GetMovies(name);
 
-            if(movies != null && movies.Count() > 0)
-            {
+            //if(movies != null && movies.Count() > 0)
+            //{
                 return movies;
-            }
+            //}
 
-            throw new System.Web.Http.HttpResponseException(HttpStatusCode.NotFound);
+            //throw new System.Web.Http.HttpResponseException(HttpStatusCode.NotFound);
 
         }
 
         [HttpPost]
         public Movie Post(Movie movie)
         {
-            return movie;
+            var movies = GetMovies(null);
+            movies.Add(movie);
+
+            return movies.Where(m => m.Id == movie.Id ).First();
 
         }
 
@@ -55,18 +52,16 @@ namespace Milestone1.Controllers
 
             var modifiedMovie = movies.Where(m => m.Id == movie.Id).First();
 
-            if (modifiedMovie != null)
-            {
-                modifiedMovie.Name = movie.Name;
-                modifiedMovie.ReleaseDate = movie.ReleaseDate;
+            //if (modifiedMovie != null)
+            //{
+            modifiedMovie = movie;
                 return modifiedMovie;
-            }
-                    
+            //}
 
-            throw new System.Web.Http.HttpResponseException(HttpStatusCode.BadRequest);
+            //throw new System.Web.Http.HttpResponseException(HttpStatusCode.BadRequest);
         }
 
-        public static IEnumerable<Movie> GetMovies(string name)
+        public static List<Movie> GetMovies(string name)
         {
             var movies = new List<Movie>();
 
@@ -76,7 +71,7 @@ namespace Milestone1.Controllers
 
             if(name != null  && name.Length > 0 )
             {
-                return movies.Where(m => m.Name == name);
+                return movies.Where(m => m.Name == name).ToList();
             }
 
             return movies;
