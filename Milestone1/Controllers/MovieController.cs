@@ -63,11 +63,7 @@ namespace Milestone1.Controllers
 
         public static List<Movie> GetMovies(string name)
         {
-            var movies = new List<Movie>();
-
-            movies.Add(new Movie { Id = 1, Name = "Saving Private Ryan", ReleaseDate = DateTime.Today });
-            movies.Add(new Movie { Id = 2, Name = "Gladiator", ReleaseDate = DateTime.Today });
-            movies.Add(new Movie { Id = 3, Name = "Sherlock Holmes", ReleaseDate = DateTime.Today });
+            var movies = CreateMockMovieList();
 
             if(name != null  && name.Length > 0 )
             {
@@ -75,6 +71,19 @@ namespace Milestone1.Controllers
             }
 
             return movies;
+        }
+
+
+        public static List<Movie> CreateMockMovieList()
+        {
+            var movies = new List<Movie>();
+
+            movies.Add(new Movie { Id = 1, Name = "Saving Private Ryan", ReleaseDate = DateTime.Today });
+            movies.Add(new Movie { Id = 2, Name = "Gladiator", ReleaseDate = DateTime.Today });
+            movies.Add(new Movie { Id = 3, Name = "Sherlock Holmes", ReleaseDate = DateTime.Today });
+
+            return movies;
+
         }
     }
 }
