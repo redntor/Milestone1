@@ -52,8 +52,8 @@ namespace TestMilestone1
             };
 
             var result = mc.Post(movie); ;
-
-            Assert.True(movie == result);
+            Assert.IsType<OkObjectResult>(result);
+       
         }
 
         [Fact]
@@ -67,8 +67,7 @@ namespace TestMilestone1
             };
 
             var result = mc.Put(movie); ;
-
-            Assert.True(movie == result);
+            Assert.IsType<OkObjectResult>(result);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Milestone1.Controllers
     [Route("[controller]")]
     public class MovieController : ControllerBase
     {
-        
+
         private readonly ILogger<MovieController> _logger;
 
         public MovieController(ILogger<MovieController> logger)
@@ -27,8 +27,8 @@ namespace Milestone1.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult Get(string name)
         {
-    
-            var movies =  Mock.GetMovies(name);
+
+            var movies = Mock.GetMovies(name);
 
             if (movies != null && movies.Count > 0)
             {
@@ -41,29 +41,54 @@ namespace Milestone1.Controllers
         }
 
         [HttpPost]
-        public Movie Post(Movie movie)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Movie))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult Post(Movie movie)
         {
+            if(movie == null || movie.Id == 0 || movie.Name.Length == 0 || movie.ReleaseDate == DateTime.MinValue)
+            {
+                return BadRequest();
+            }
+
             var movies = Mock.GetMovies(null);
             movies.Add(movie);
 
-            return movies.Where(m => m.Id == movie.Id ).First();
+            var result = movies.Where(m => m.Id == movie.Id).FirstOrDefault();
 
+            if (result != null && result.Id > 0)
+            {
+                return Ok(result);
+            }
+
+            else
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         [HttpPut]
-        public Movie Put(Movie movie)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Movie))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult Put(Movie movie)
         {
+            if (movie == null || movie.Id == 0 || movie.Name.Length == 0 || movie.ReleaseDate == DateTime.MinValue)
+            {
+                return BadRequest();
+            }
+
             var movies = Mock.GetMovies(null);
 
             var modifiedMovie = movies.Where(m => m.Id == movie.Id).First();
 
-            //if (modifiedMovie != null)
-            //{
-            modifiedMovie = movie;
-                return modifiedMovie;
-            //}
+            if (modifiedMovie != null)
+            {
+                modifiedMovie = movie;
+                return Ok(modifiedMovie);
+            }
 
-            //throw new System.Web.Http.HttpResponseException(HttpStatusCode.BadRequest);
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
       
