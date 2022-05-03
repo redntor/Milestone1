@@ -20,11 +20,16 @@ namespace Milestone1.Controllers
             _logger = logger;
         }
 
+        public MovieController()
+        {
+
+        }
+
         [HttpGet]
         public List<Movie> Get(string name)
         {
     
-            var movies =  GetMovies(name);
+            var movies =  Mock.GetMovies(name);
 
             //if(movies != null && movies.Count() > 0)
             //{
@@ -38,7 +43,7 @@ namespace Milestone1.Controllers
         [HttpPost]
         public Movie Post(Movie movie)
         {
-            var movies = GetMovies(null);
+            var movies = Mock.GetMovies(null);
             movies.Add(movie);
 
             return movies.Where(m => m.Id == movie.Id ).First();
@@ -48,7 +53,7 @@ namespace Milestone1.Controllers
         [HttpPut]
         public Movie Put(Movie movie)
         {
-            var movies = GetMovies(null);
+            var movies = Mock.GetMovies(null);
 
             var modifiedMovie = movies.Where(m => m.Id == movie.Id).First();
 
@@ -61,29 +66,9 @@ namespace Milestone1.Controllers
             //throw new System.Web.Http.HttpResponseException(HttpStatusCode.BadRequest);
         }
 
-        public static List<Movie> GetMovies(string name)
-        {
-            var movies = CreateMockMovieList();
-
-            if(name != null  && name.Length > 0 )
-            {
-                return movies.Where(m => m.Name == name).ToList();
-            }
-
-            return movies;
-        }
+      
 
 
-        public static List<Movie> CreateMockMovieList()
-        {
-            var movies = new List<Movie>();
-
-            movies.Add(new Movie { Id = 1, Name = "Saving Private Ryan", ReleaseDate = DateTime.Today });
-            movies.Add(new Movie { Id = 2, Name = "Gladiator", ReleaseDate = DateTime.Today });
-            movies.Add(new Movie { Id = 3, Name = "Sherlock Holmes", ReleaseDate = DateTime.Today });
-
-            return movies;
-
-        }
+    
     }
 }

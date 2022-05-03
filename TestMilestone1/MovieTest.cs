@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Milestone1;
 using Milestone1.Controllers;
 using System;
@@ -7,13 +8,20 @@ namespace TestMilestone1
 {
     public class MovieTest
     {
+        MovieController mc;
+
+        public MovieTest()
+        {
+            mc = new MovieController();
+        }
+
         [Theory]
         [InlineData(null)]
         [InlineData("")]
         [InlineData("Gladiator")]
          public void GetMovie_Passing_Test(string name)
         {
-            var movie = MovieController.Get(name);
+            var movie = mc.Get(name);
 
             Assert.NotNull(movie);
         }
@@ -23,7 +31,7 @@ namespace TestMilestone1
         [InlineData("Saw")]
         public void GetMovie_Failing_Test(string name)
         {
-            var movies = MovieController.Get(name);
+            var movies = mc.Get(name);
 
             Assert.True(movies == null || movies.Count == 0);
         }
@@ -39,7 +47,7 @@ namespace TestMilestone1
                 ReleaseDate = DateTime.Today
             };
 
-            var result = MovieController.Post(movie); ;
+            var result = mc.Post(movie); ;
 
             Assert.True(movie == result);
         }
@@ -54,7 +62,7 @@ namespace TestMilestone1
                 ReleaseDate = DateTime.Today
             };
 
-            var result = MovieController.Put(movie); ;
+            var result = mc.Put(movie); ;
 
             Assert.True(movie == result);
         }
