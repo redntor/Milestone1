@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Milestone1;
 using Milestone1.Controllers;
+using Moq;
 using System;
 using Xunit;
 
@@ -12,7 +14,10 @@ namespace TestMilestone1
 
         public MovieTest()
         {
-            mc = new MovieController();
+            var mock = new Mock<ILogger<MovieController>>();
+            ILogger<MovieController> logger = mock.Object;
+
+            mc = new MovieController(logger);
         }
 
         [Theory]
@@ -32,8 +37,7 @@ namespace TestMilestone1
         public void GetMovie_Failing_Test(string name)
         {
             var movies = mc.Get(name);
-
-            Assert.True(movies == null || movies.Count == 0);
+            Assert.IsType<NotFoundResult>(movies);
         }
 
 

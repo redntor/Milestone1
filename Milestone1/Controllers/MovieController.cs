@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -20,23 +21,22 @@ namespace Milestone1.Controllers
             _logger = logger;
         }
 
-        public MovieController()
-        {
-
-        }
 
         [HttpGet]
-        public List<Movie> Get(string name)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Movie>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult Get(string name)
         {
     
             var movies =  Mock.GetMovies(name);
 
-            //if(movies != null && movies.Count() > 0)
-            //{
-                return movies;
-            //}
+            if (movies != null && movies.Count > 0)
+            {
+                return Ok(movies);
+            }
 
-            //throw new System.Web.Http.HttpResponseException(HttpStatusCode.NotFound);
+            return NotFound();
+
 
         }
 
